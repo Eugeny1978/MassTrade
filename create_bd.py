@@ -43,6 +43,11 @@ def create_table_Clients():
         )""")
 
 def create_table_ApiKeys():
+    """
+    active_date - в формате timestamps (INTEGER). Для удобной выбоки по дате (База не поддерживает тип данных Дата)
+    Можно сделать доп Колонку с Датой отображения в виде текста 2024-01-26 (TEXT) - удобно просматривать человеком
+    И затем при заполнении этой колонки получать значения active_date
+    """
     with sq.connect(DATABASE) as connect:
         curs = connect.cursor()
         curs.execute(f"""CREATE TABLE IF NOT EXISTS ApiKeys (
@@ -50,9 +55,9 @@ def create_table_ApiKeys():
         exchange TEXT,
         apiKey TEXT,
         secret TEXT,
-        password TEXT,
+        password TEXT,        
+        active_date INTEGER,
         state TEXT,
-        active_date TEXT,
         FOREIGN KEY(client) REFERENCES Clients(name) ON DELETE SET NULL,
         FOREIGN KEY(exchange) REFERENCES Exchanges(name) ON DELETE SET NULL,
         FOREIGN KEY(state) REFERENCES States(name) ON DELETE SET NULL
@@ -99,11 +104,11 @@ def drop_tables(tables: list or tuple = ()):
 
 
 
-
 if __name__ == '__main__':
 
     simple_tables = ('Currencies', 'States', 'TradeTypes')
-    currencies_data = ('ATOM', 'BTC', 'ETH', 'MATIC', 'XRP')
+    currencies_data = ('1INCH', 'ADA', 'ALGO', 'ATOM', 'BTC', 'DOGE', 'DOT', 'ETH', 'FIL', 'IOTA',
+                       'LINK', 'LTC', 'MATIC', 'NEAR', 'SOL', 'TRX', 'UNI', 'XLM', 'XMR', 'XRP')
     states_data = ('Run', 'Pause', 'Stop')
     tradetypes_data = ('Liquid_coins', 'Shit_coins')
     simple_datas = {simple_tables[0]: currencies_data,
