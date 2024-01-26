@@ -52,9 +52,9 @@ def create_table_Clients():
 
 def create_table_ApiKeys():
     """
-    active_date - в формате timestamps (INTEGER). Для удобной выбоки по дате (База не поддерживает тип данных Дата)
-    Можно сделать доп Колонку с Датой отображения в виде текста 2024-01-26 (TEXT) - удобно просматривать человеком
-    И затем при заполнении этой колонки получать значения active_date
+    active_timestamp - в формате timestamps (INTEGER). Для удобной выбоpки по дате (База не поддерживает тип данных Дата)
+    active_date - с Датой отображения в виде текста 2024-01-26 (TEXT) - удобно просматривать человеком
+    И затем при заполнении этой колонки получать значения active_timestamp
     """
     with sq.connect(DATABASE) as connect:
         curs = connect.cursor()
@@ -143,11 +143,8 @@ def fill_table_ApiKeys():
     with sq.connect(DATABASE) as connect:
         curs = connect.cursor()
         for index, row in df.iterrows():
-            client = row['name']
-            exchange = row['exchange']
-            apiKey = row['apiKey']
-            secret = row['secret']
-            password = row['password'] if row['password'] else None
+            client, exchange = row['name'], row['exchange']
+            apiKey, secret, password = row['apiKey'], row['secret'], row['password']
             state = get_state_value(row['status'])
             active_date = date.today() + relativedelta(months=3)
             active_timestamp = mktime(active_date.timetuple())
@@ -155,13 +152,17 @@ def fill_table_ApiKeys():
             no_client = check_no_value(client, 'client', table, curs)
             no_apiKey = check_no_value(apiKey, 'apiKey', table, curs)
             no_secret = check_no_value(secret, 'secret', table, curs)
-            no_password = check_no_value(password, 'password', table, curs)
-            no_record = (no_client and no_apiKey and no_secret and no_password)
+            no_record = (no_client and no_apiKey and no_secret)
+
             if no_record:
                 text = f"""INSERT INTO {table}
-                (client, exchange, apiKey, secret, password, active_timestamp, state, active_date) VALUES
-                ('{client}', '{exchange}', '{apiKey}', '{secret}', '{password}', {active_timestamp}, '{state}', '{active_date}')"""
-                curs.execute(text)
+                (client, exchange, apiKey, secret, active_timestamp, state, active_date, password) VALUES
+                ('{client}', '{exchange}', '{apiKey}', '{secret}', {active_timestamp}, '{state}', '{active_date}', """
+                if pd.isna(password):
+                    password_text = f" NULL)"
+                else:
+                    password_text = f"'{password}')"
+                curs.execute(text+password_text)
 
 def get_state_value(status): # ('Active', 'Passive')
     value = states_data[0] if status == 'Active' else states_data[2]
