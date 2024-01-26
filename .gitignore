@@ -1,3 +1,4 @@
 /.idea/
 /venv/
 /date_base/DataBase.db
+/date_base/csv/
