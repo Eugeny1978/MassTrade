@@ -43,12 +43,7 @@ class Client:
             client = curs.fetchone()
             if not client:
                 return None
-            # client = pd.DataFrame(columns=('client', 'exchange', 'apikey', 'secret', 'password', 'active_timestamp'))
-            # for row in responce:
-            #     client.loc[len(client)] = row
-            # return client
             return client
-
 
     def get_exchange_names_by_type(self):
         query = (f"""
@@ -61,9 +56,6 @@ class Client:
             curs.execute(query)
             return [select[0] for select in curs]
 
-
-
-
     def __init__(self, client_name, trade='Liquid_coins'):
         self.client_name = client_name
         self.trade = trade
@@ -73,7 +65,7 @@ class Client:
             return
         self.exchange = client_db['exchange']
         self.keys = self.form_keys(client_db)
-        self.connection = self.connections[self.exchange](self.keys)
+        self.connection = self.connections[self.exchange](self.keys) # сделать проверку на актуальность ключей
 
     def form_keys(self, client: sq.Row):
         keys = {'apiKey': client['apiKey'],
@@ -81,6 +73,7 @@ class Client:
                 'password': client['password']}
         return keys
 
+
 if __name__ == '__main__':
-    client = Client('Alehin5 Roman')
+    client = Client('Alehin Roman')
     print(client.__dict__)
