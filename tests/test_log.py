@@ -1,4 +1,4 @@
-import logging
+import logs
 import pandas as pd
 
 # x = input('Введите число: ')
@@ -10,7 +10,7 @@ import pandas as pd
 logging.getLogger(__name__)
 logging.basicConfig(
     level=logging.DEBUG, # INFO DEBUG WARNING ERROR CRITICAL FATAL
-    filename = "test_log.log",
+    filename ="test_log.log",
     format = "%(asctime)s | %(module)s | %(name)s | %(levelname)s.%(funcName)s:%(lineno)d - %(message)s",
     datefmt='%Y-%m-%d %H:%M:%S',
     encoding='UTF-8',
