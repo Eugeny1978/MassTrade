@@ -2,7 +2,7 @@ import warnings                 # для того чтобы библиотек�
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 import pandas as pd             # Работа с DataFrame
 import sqlite3 as sq            # Работа с Базой Данных
-from date_base.path_to_base import DATABASE # Путь к Базе Данных
+from data_base.path_to_base import DATABASE # Путь к Базе Данных
 import ccxt
 from datetime import datetime, date # Работа с Временем
 from time import mktime

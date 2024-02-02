@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from time import mktime
-from date_base.path_to_base import DATABASE
+from data_base.path_to_base import DATABASE
 
 pd.options.display.width= None # Отображение Таблицы на весь Экран
 pd.options.display.max_columns= 20 # Макс Кол-во Отображаемых Колонок
