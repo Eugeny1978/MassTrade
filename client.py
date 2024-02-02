@@ -65,7 +65,18 @@ class Client:
             return
         self.exchange = client_db['exchange']
         self.keys = self.form_keys(client_db)
-        self.connection = self.connections[self.exchange](self.keys) # сделать проверку на актуальность ключей
+        self.connection = self.connect_exchange()
+        if not self.connection:
+            Logging(f"Биржа: Не удалось установить Подключение. | {self.client_name} | {self.exchange} | Проверьте API Ключи")
+            return
+
+    def connect_exchange(self):
+        try:
+            connection = self.connections[self.exchange](self.keys)
+        except:
+            connection = None
+        return connection
+
 
     def form_keys(self, client: sq.Row):
         keys = {'apiKey': client['apiKey'],
